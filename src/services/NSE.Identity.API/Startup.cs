@@ -50,13 +50,13 @@ namespace NSE.Identity.API
             {
                 bearerOptions.RequireHttpsMetadata = true;
                 bearerOptions.SaveToken = true;
-                bearerOptions.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+                bearerOptions.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuerSigningKey = true,
                     IssuerSigningKey = new SymmetricSecurityKey(key),
                     ValidateIssuer = true,
                     ValidateAudience = true,
-                    ValidAudiences = appSettings.ValidIn,
+                    ValidAudience = appSettings.ValidIn,
                     ValidIssuer = appSettings.Issuer
                 };
             });
