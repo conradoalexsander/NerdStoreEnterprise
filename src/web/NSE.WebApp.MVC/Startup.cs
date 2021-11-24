@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using NSE.WebApp.MVC.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,6 +25,7 @@ namespace NSE.WebApp.MVC
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+            services.RegisterServices();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
