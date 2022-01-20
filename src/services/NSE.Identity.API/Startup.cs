@@ -17,8 +17,8 @@ namespace NSE.Identity.API
             //TODO: Check refactoring for .NET 6 ConfigurationManager
             var builder = new ConfigurationBuilder()
                 .SetBasePath(hostEnvironment.ContentRootPath)
-                .AddJsonFile("appsetting.json", true, true)
-                .AddJsonFile($"appsetting.{hostEnvironment.EnvironmentName}.json", true, true)
+                .AddJsonFile("appsettings.json", true, true)
+                .AddJsonFile($"appsettings.{hostEnvironment.EnvironmentName}.json", true, true)
                 .AddEnvironmentVariables();
 
             if (hostEnvironment.IsDevelopment())
