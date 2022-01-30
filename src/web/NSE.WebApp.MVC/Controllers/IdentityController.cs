@@ -1,17 +1,22 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Mvc;
 using NSE.WebApp.MVC.Models;
 using NSE.WebApp.MVC.Services;
+using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace NSE.WebApp.MVC.Controllers
 {
     public class IdentityController : Controller
     {
-        private readonly IAuthenticationService _authenticationService;
+        private readonly IAuthService _authService;
 
-        public IdentityController(IAuthenticationService authenticationService)
+        public IdentityController(IAuthService authService)
         {
-            _authenticationService = authenticationService;
+            _authService = authService;
         }
 
         [HttpGet]
@@ -27,10 +32,12 @@ namespace NSE.WebApp.MVC.Controllers
         {
             if (!ModelState.IsValid) return View(registerUser);
 
-            var response = await _authenticationService.Register(registerUser);
+            var response = await _authService.Register(registerUser);
 
 
-            if (false) return View(registerUser);
+            //if (false) return View(registerUser);
+            await ExecuteLogin(response);
+
 
             return RedirectToAction("Index", "Home");
 
@@ -49,9 +56,10 @@ namespace NSE.WebApp.MVC.Controllers
         {
             if (!ModelState.IsValid) return View(loginUser);
 
-            var response = await _authenticationService.Login(loginUser);
+            var response = await _authService.Login(loginUser);
 
-            if (false) return View(loginUser);
+            //if (false) return View(loginUser);
+            await ExecuteLogin(response);
 
             return RedirectToAction("Index", "Home");
         }
@@ -61,6 +69,33 @@ namespace NSE.WebApp.MVC.Controllers
         public IActionResult Logout()
         {
             return RedirectToAction("Index", "Home");
+        }
+
+        private async Task ExecuteLogin(UserLoginResponse loginResponse)
+        {
+            var token = GetFormattedToken(loginResponse.AccessToken);
+
+            var claims = new List<Claim>();
+            claims.Add(new Claim("JWT", loginResponse.AccessToken));
+            claims.AddRange(token.Claims);
+
+            var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+
+            var authProperties = new AuthenticationProperties
+            {
+                ExpiresUtc = System.DateTimeOffset.UtcNow.AddMinutes(60),
+                IsPersistent = true,
+            };
+
+            await HttpContext.SignInAsync(
+                CookieAuthenticationDefaults.AuthenticationScheme,
+                new ClaimsPrincipal(claimsIdentity),
+                authProperties);
+        }
+
+        private static JwtSecurityToken GetFormattedToken(string jwtToken)
+        {
+            return new JwtSecurityTokenHandler().ReadToken(jwtToken) as JwtSecurityToken;
         }
     }
 }

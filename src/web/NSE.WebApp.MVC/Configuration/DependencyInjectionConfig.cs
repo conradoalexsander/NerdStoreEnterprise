@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
 using NSE.WebApp.MVC.Services;
 
 namespace NSE.WebApp.MVC.Configuration
@@ -7,7 +9,9 @@ namespace NSE.WebApp.MVC.Configuration
     {
         public static void RegisterServices(this IServiceCollection services)
         {
-            services.AddHttpClient<IAuthenticationService, AuthenticationService>();
+            services.AddHttpClient<IAuthService, AuthService>();
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
         }
     }
 }

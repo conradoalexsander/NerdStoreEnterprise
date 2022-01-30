@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace NSE.WebApp.MVC.Services
 {
-    public interface IAuthenticationService
+    public interface IAuthService
     {
         Task<UserLoginResponse> Login(LoginUser loginUser);
         Task<UserLoginResponse> Register(RegisterUser loginUser);
