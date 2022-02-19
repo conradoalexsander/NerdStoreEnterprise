@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
+using NSE.WebApp.MVC.Extensions;
 using NSE.WebApp.MVC.Services;
 
 namespace NSE.WebApp.MVC.Configuration
@@ -11,7 +12,7 @@ namespace NSE.WebApp.MVC.Configuration
         {
             services.AddHttpClient<IAuthService, AuthService>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-
+            services.AddScoped<IUser,AspNetUser>();
         }
     }
 }
