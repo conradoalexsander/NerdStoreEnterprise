@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace NSE.WebApp.MVC.Services
 {
-    public class AuthService : IAuthService
+    public class AuthService : Service, IAuthService
     {
         private readonly HttpClient _httpClient;
 
@@ -25,11 +25,20 @@ namespace NSE.WebApp.MVC.Services
 
             var response = await _httpClient.PostAsync("https://localhost:44310/api/identity/authenticate", loginContent);
 
+
             var options = new JsonSerializerOptions
             {
                 PropertyNameCaseInsensitive = true,
                 NumberHandling = JsonNumberHandling.AllowReadingFromString | JsonNumberHandling.WriteAsString
             };
+
+            if (!HandleErrosResponse(response))
+            {
+                return new UserLoginResponse
+                {
+                    ResponseResult = JsonSerializer.Deserialize<ResponseResult>(await response.Content.ReadAsStringAsync(), options)
+                };
+            }
 
             return JsonSerializer.Deserialize<UserLoginResponse>(await response.Content.ReadAsStringAsync(), options);
         }
@@ -43,10 +52,19 @@ namespace NSE.WebApp.MVC.Services
 
             var response = await _httpClient.PostAsync("https://localhost:44310/api/identity/new-account", registerContent);
 
+
             var options = new JsonSerializerOptions
             {
                 PropertyNameCaseInsensitive = true,
             };
+
+            if (!HandleErrosResponse(response))
+            {
+                return new UserLoginResponse
+                {
+                    ResponseResult = JsonSerializer.Deserialize<ResponseResult>(await response.Content.ReadAsStringAsync(), options)
+                };
+            }
 
             return JsonSerializer.Deserialize<UserLoginResponse>(await response.Content.ReadAsStringAsync(), options);
         }

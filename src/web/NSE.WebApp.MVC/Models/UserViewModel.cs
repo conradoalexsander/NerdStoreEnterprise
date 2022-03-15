@@ -34,6 +34,8 @@ namespace NSE.WebApp.MVC.Models
         public string AccessToken { get; set; }
         public string ExpiresIn { get; set; }
         public UserToken UserToken { get; set; }
+
+        public ResponseResult ResponseResult { get; set; }
     }
 
     public class UserToken

@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace NSE.WebApp.MVC.Controllers
 {
-    public class IdentityController : Controller
+    public class IdentityController : MainController
     {
         private readonly IAuthService _authService;
 
@@ -34,10 +34,12 @@ namespace NSE.WebApp.MVC.Controllers
 
             var response = await _authService.Register(registerUser);
 
+            if (HasResponseErrors(response.ResponseResult))
+            {
+                return View(registerUser);
+            }
 
-            //if (false) return View(registerUser);
             await ExecuteLogin(response);
-
 
             return RedirectToAction("Index", "Home");
 
@@ -58,16 +60,22 @@ namespace NSE.WebApp.MVC.Controllers
 
             var response = await _authService.Login(loginUser);
 
-            //if (false) return View(loginUser);
+            if (HasResponseErrors(response.ResponseResult))
+            {
+                return View(loginUser);
+            }
+
             await ExecuteLogin(response);
 
             return RedirectToAction("Index", "Home");
         }
 
+
         [HttpGet]
         [Route("logout")]
-        public IActionResult Logout()
+        public async Task<IActionResult> Logout()
         {
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             return RedirectToAction("Index", "Home");
         }
 
