@@ -1,4 +1,7 @@
-﻿using NSE.WebApp.MVC.Models;
+﻿using Microsoft.Extensions.Options;
+using NSE.WebApp.MVC.Extensions;
+using NSE.WebApp.MVC.Models;
+using System;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -7,17 +10,21 @@ namespace NSE.WebApp.MVC.Services
     public class AuthService : Service, IAuthService
     {
         private readonly HttpClient _httpClient;
+        private readonly AppSettings _settings;
 
-        public AuthService(HttpClient httpClient)
+        public AuthService(HttpClient httpClient, IOptions<AppSettings> settings)
         {
+            httpClient.BaseAddress = new Uri(settings.Value.AuthenticationAPI.BaseUrl);
+
             _httpClient = httpClient;
+            _settings = settings.Value;
         }
 
         public async Task<UserLoginResponse> Login(LoginUser loginUser)
         {
             var loginContent = GetContent(loginUser);
 
-            var response = await _httpClient.PostAsync("https://localhost:44310/api/identity/authenticate", loginContent);
+            var response = await _httpClient.PostAsync($"{_settings.AuthenticationAPI.AuthenticatePath}", loginContent);
 
             if (!HandleErrorsResponse(response))
             {
@@ -34,7 +41,7 @@ namespace NSE.WebApp.MVC.Services
         {
             var registerContent = GetContent(registerUser);
 
-            var response = await _httpClient.PostAsync("https://localhost:44310/api/identity/new-account", registerContent);
+            var response = await _httpClient.PostAsync($"{_settings.AuthenticationAPI.NewAccountPath}", registerContent);
 
             if (!HandleErrorsResponse(response))
             {
