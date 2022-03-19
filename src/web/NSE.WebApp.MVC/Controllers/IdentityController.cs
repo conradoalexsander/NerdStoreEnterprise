@@ -3,8 +3,10 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using NSE.WebApp.MVC.Models;
 using NSE.WebApp.MVC.Services;
+using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
+using System.Net;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -30,6 +32,7 @@ namespace NSE.WebApp.MVC.Controllers
         [Route("new-account")]
         public async Task<IActionResult> Register(RegisterUser registerUser)
         {
+
             if (!ModelState.IsValid) return View(registerUser);
 
             var response = await _authService.Register(registerUser);
@@ -47,15 +50,18 @@ namespace NSE.WebApp.MVC.Controllers
 
         [HttpGet]
         [Route("login")]
-        public IActionResult Login()
+        public IActionResult Login(string returnUrl = null)
         {
+            ViewData["ReturnUrl"] = returnUrl;
             return View();
         }
 
         [HttpPost]
         [Route("login")]
-        public async Task<IActionResult> Login(LoginUser loginUser)
+        public async Task<IActionResult> Login(LoginUser loginUser, string returnUrl = null)
         {
+            ViewData["ReturnUrl"] = returnUrl;
+
             if (!ModelState.IsValid) return View(loginUser);
 
             var response = await _authService.Login(loginUser);
@@ -67,7 +73,9 @@ namespace NSE.WebApp.MVC.Controllers
 
             await ExecuteLogin(response);
 
-            return RedirectToAction("Index", "Home");
+            if(string.IsNullOrEmpty(returnUrl)) return RedirectToAction("Index", "Home");
+
+            return LocalRedirect(returnUrl);
         }
 
 

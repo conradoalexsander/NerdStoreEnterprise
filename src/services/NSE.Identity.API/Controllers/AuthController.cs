@@ -35,7 +35,6 @@ namespace NSE.Identity.API.Controllers
         public async Task<ActionResult> Register(RegisterUser registerUser)
         {
 
-            return new StatusCodeResult(401);
             if (!ModelState.IsValid) return CustomResponse(ModelState);
 
             var user = new IdentityUser
