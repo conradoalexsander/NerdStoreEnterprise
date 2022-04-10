@@ -19,11 +19,16 @@
 
   <ItemGroup>
     <Folder Include="Controllers" />
+    <Folder Include="Models" />
   </ItemGroup>
 
   <ItemGroup>
     <Compile Remove="Controllers\WeatherForecastController.cs" />
     <Compile Remove="WeatherForecast.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\building blocks\NSE.Core\NSE.Core.csproj" />
   </ItemGroup>
 
 </Project>
