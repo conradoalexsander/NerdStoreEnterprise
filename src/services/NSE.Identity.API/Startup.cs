@@ -32,6 +32,8 @@ namespace NSE.Identity.API
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddIdentityConfiguration(Configuration);
+            
+            services.RegisterServices();
 
             services.AddApiConfiguration();
 

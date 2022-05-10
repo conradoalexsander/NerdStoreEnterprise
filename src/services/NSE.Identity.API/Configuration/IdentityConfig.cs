@@ -9,6 +9,8 @@ using Microsoft.IdentityModel.Tokens;
 using NSE.Identity.API.Data;
 using NSE.Identity.API.Extensions;
 using System.Text;
+using NSE.Identity.API.Controllers;
+using TokenHandler = NSE.Identity.API.Controllers.TokenHandler;
 
 namespace NSE.Identity.API.Configuration
 {
@@ -30,7 +32,7 @@ namespace NSE.Identity.API.Configuration
             // JWT
             var appSettings = appSettingsSection.Get<AppSettings>();
             var key = Encoding.ASCII.GetBytes(appSettings.Secret);
-
+            
             services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -49,6 +51,7 @@ namespace NSE.Identity.API.Configuration
                     ValidIssuer = appSettings.Issuer
                 };
             });
+            
 
         }
 
