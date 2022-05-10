@@ -1,55 +1,37 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
 using NSE.Identity.API.Extensions;
 using NSE.Identity.API.Models;
-using System;
-using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
-using System.Security.Claims;
-using System.Text;
 using System.Threading.Tasks;
+using NSE.Identity.API.Services;
 
 namespace NSE.Identity.API.Controllers
 {
     [Route("api/identity")]
     public class AuthController : MainController
     {
-        private readonly SignInManager<IdentityUser> _signInManager;
-        private readonly UserManager<IdentityUser> _userManager;
-        private readonly ITokenHandler _tokenHandler;
+        private readonly ITokenService _tokenService;
+        private readonly IAuthService _authService;
 
         public AuthController(
-            SignInManager<IdentityUser> signInManager,
-            UserManager<IdentityUser> userManager,
             IOptions<AppSettings> appSettings, 
-            ITokenHandler tokenHandler)
+            ITokenService tokenService, 
+            IAuthService authService)
         {
-            _signInManager = signInManager;
-            _userManager = userManager;
-            _tokenHandler = tokenHandler;
+            _tokenService = tokenService;
+            _authService = authService;
         }
 
         [HttpPost("new-account")]
         public async Task<ActionResult> Register(RegisterUser registerUser)
         {
-
             if (!ModelState.IsValid) return CustomResponse(ModelState);
-
-            var user = new IdentityUser
-            {
-                UserName = registerUser.Email,
-                Email = registerUser.Email,
-                EmailConfirmed = true
-            };
-
-            var result = await _userManager.CreateAsync(user, registerUser.Password);
+            
+            var result = await _authService.CreateUserAsync(registerUser);
 
             if (result.Succeeded)
             {
-                return CustomResponse(await _tokenHandler.GenerateJWT(registerUser.Email));
+                return CustomResponse(await _tokenService.GenerateJWT(registerUser.Email));
             }
 
             foreach (var error in result.Errors)
@@ -66,16 +48,11 @@ namespace NSE.Identity.API.Controllers
         {
             if (!ModelState.IsValid) return CustomResponse();
 
-            var result = await _signInManager.PasswordSignInAsync(
-                    loginUser.Email,
-                    password: loginUser.Password,
-                    isPersistent: false,
-                    lockoutOnFailure: true);
-            //lockoutOnFailure: lock the loging in the application for an amount of time if there were too many failed logins attempts. 
+            var result = await _authService.SignInUserAsync(loginUser);
 
             if (result.Succeeded)
             {
-                return CustomResponse(await _tokenHandler.GenerateJWT(loginUser.Email));
+                return CustomResponse(await _tokenService.GenerateJWT(loginUser.Email));
             }
 
             if (result.IsLockedOut)

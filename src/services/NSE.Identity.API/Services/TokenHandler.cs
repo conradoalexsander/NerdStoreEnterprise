@@ -11,17 +11,17 @@ using Microsoft.IdentityModel.Tokens;
 using NSE.Identity.API.Extensions;
 using NSE.Identity.API.Models;
 
-namespace NSE.Identity.API.Controllers {
+namespace NSE.Identity.API.Services {
 
-    public interface ITokenHandler {
+    public interface ITokenService {
         Task<UserLoginResponse> GenerateJWT(string email);
     }
     
-    public class TokenHandler : ITokenHandler {
+    public class TokenService : ITokenService {
         private readonly AppSettings _appSettings;
         private readonly UserManager<IdentityUser> _userManager;
         
-        public TokenHandler( UserManager<IdentityUser> userManager, IOptions<AppSettings> appSettings) {
+        public TokenService( UserManager<IdentityUser> userManager, IOptions<AppSettings> appSettings) {
             _userManager = userManager;
             _appSettings = appSettings.Value;
         }

@@ -10,7 +10,6 @@ using NSE.Identity.API.Data;
 using NSE.Identity.API.Extensions;
 using System.Text;
 using NSE.Identity.API.Controllers;
-using TokenHandler = NSE.Identity.API.Controllers.TokenHandler;
 
 namespace NSE.Identity.API.Configuration
 {
