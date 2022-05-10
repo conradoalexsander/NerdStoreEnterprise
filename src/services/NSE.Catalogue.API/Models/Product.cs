@@ -1,9 +1,9 @@
 using System;
-using NSE.Core;
+using NSE.Core.DomainObjects;
 
-namespace NSE.Catalogue.API.Data
+namespace NSE.Catalogue.API.Models
 {
-    public class Product : Entity
+    public class Product : Entity, IAggregateRoot
     {
         public string Name { get; set; }
         public string Description { get; set; }

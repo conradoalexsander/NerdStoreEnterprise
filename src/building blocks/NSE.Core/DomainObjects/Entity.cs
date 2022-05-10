@@ -1,6 +1,6 @@
 using System;
 
-namespace NSE.Core
+namespace NSE.Core.DomainObjects
 {
     public abstract class Entity
     {
@@ -8,17 +8,17 @@ namespace NSE.Core
         public override bool Equals(object obj)
         {
             var compareTo = obj as Entity;
-            
-            if (ReferenceEquals(this,compareTo)) return true;
-            if (ReferenceEquals(null,compareTo)) return false;
+
+            if (ReferenceEquals(this, compareTo)) return true;
+            if (ReferenceEquals(null, compareTo)) return false;
 
             return Id.Equals(compareTo.Id);
         }
 
         public override int GetHashCode()
         {
-            return (GetType().GetHashCode() * 907) + Id.GetHashCode();
-            
+            return GetType().GetHashCode() * 907 + Id.GetHashCode();
+
         }
 
         public override string ToString()
@@ -30,7 +30,7 @@ namespace NSE.Core
         {
             if (ReferenceEquals(a, null) && ReferenceEquals(b, null))
                 return true;
-            
+
             if (ReferenceEquals(a, null) || ReferenceEquals(b, null))
                 return false;
 
