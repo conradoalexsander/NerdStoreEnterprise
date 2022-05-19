@@ -366,4 +366,5 @@ FodyWeavers.xsd
 **/appsettings.Development.json
 
 # MAC OS custom attributes
+.DS_Store
 **/.DS_Store
