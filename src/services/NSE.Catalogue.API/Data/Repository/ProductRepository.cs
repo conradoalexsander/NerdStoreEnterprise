@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System;
+using Microsoft.EntityFrameworkCore;
 using NSE.Catalogue.API.Models;
 using NSE.Core.Data;
 using System.Collections.Generic;
@@ -23,7 +24,7 @@ namespace NSE.Catalogue.API.Data.Repository
             return await _context.Products.AsNoTracking().ToListAsync();
         }
 
-        public async Task<Product> GetById(int id)
+        public async Task<Product> GetById(Guid id)
         {
             return await _context.Products.FindAsync(id);
         }
