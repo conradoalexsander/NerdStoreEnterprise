@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NSE.Catalogue.API.Data;
+using NSE.WebAPI.Core.Identity;
 
 namespace NSE.Catalogue.API.Configuration {
     public static class ApiConfig {
@@ -35,6 +36,8 @@ namespace NSE.Catalogue.API.Configuration {
             app.UseRouting();
 
             app.UseCors("AllowAnyRequest");
+
+            app.UseAuthConfiguration();
 
             app.UseEndpoints(endpoints =>
             {

@@ -1,9 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using NSE.Catalogue.API.Models;
 using NSE.Core.Data;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace NSE.Catalogue.API.Data.Repository
 {
@@ -41,7 +41,7 @@ namespace NSE.Catalogue.API.Data.Repository
 
         public void Dispose()
         {
-            throw new System.NotImplementedException();
+            _context?.Dispose();
         }
     }
 }
